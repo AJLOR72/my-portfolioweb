@@ -1,0 +1,138 @@
+/* Import display fonts (Orbitron + Space Grotesk) */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Grotesk:wght@300;400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,body,#__next{height:100%;}
+body{
+  @apply bg-cosmic-900 text-white antialiased;
+  background-image: radial-gradient(ellipse at bottom, rgba(124,108,255,0.04), transparent 20%), radial-gradient(ellipse at top right, rgba(0,210,255,0.02), transparent 10%);
+}
+
+/* Font utilities */
+:root{ --font-sans: 'Space Grotesk', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; --font-display: 'Orbitron', 'Space Grotesk', sans-serif }
+body{ font-family: var(--font-sans) }
+.font-display { font-family: var(--font-display) }
+
+/* Apply display font to headings for a distinct look */
+h1,h2,h3,h4,h5,h6 { font-family: var(--font-display); letter-spacing: 0.6px }
+
+.container { @apply max-w-6xl mx-auto px-6; }
+
+.hero-canvas { position: absolute; inset:0; z-index:0; }
+.hero-content { position: relative; z-index:10; }
+
+.glow-text { text-shadow: 0 0 30px rgba(124,108,255,0.6); }
+
+/* Section heading tint for mission theme */
+h2 { color: #E8F0FF }
+
+/* Video planet background styles */
+.video-planet-wrapper { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none }
+.video-planet { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); min-width: 120%; min-height: 120%; width: auto; height: auto; opacity: 0.38; filter: saturate(0.8) contrast(0.95) blur(0.25px); mix-blend-mode: screen }
+.video-planet::poster { object-fit: cover }
+
+@media (max-width: 768px) {
+  .video-planet { display: none }
+}
+
+/* CSS fallback planet when no video uploaded */
+.css-planet { position: absolute; left: 50%; top: 40%; transform: translate(-50%,-50%); width: 360px; height: 360px; z-index:0; pointer-events: none; opacity: 0.6 }
+.css-planet-core { width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #8b7dff 0%, #2b2b5f 60%); box-shadow: 0 20px 80px rgba(59,50,150,0.35); margin: auto; transform-origin: center; animation: planet-spin 18s linear infinite }
+.css-planet-ring { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) rotateX(60deg); width: 360px; height: 360px; border-radius: 50%; border: 2px solid rgba(124,108,255,0.14); box-shadow: 0 0 40px rgba(124,108,255,0.06); transform-origin: center; animation: ring-rotate 26s linear infinite }
+
+@keyframes planet-spin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+@keyframes ring-rotate { from { transform: translate(-50%,-50%) rotateX(60deg) rotate(0deg) } to { transform: translate(-50%,-50%) rotateX(60deg) rotate(-360deg) } }
+
+/* Page-wide stars overlay (covers everything below the hero) */
+.page-stars { position: absolute; left: 0; right: 0; top: 100vh; bottom: 0; pointer-events: none; z-index: 2; overflow: hidden }
+.page-star { position: absolute; background: radial-gradient(circle, #ffffff 0%, rgba(124,108,255,0.9) 45%, transparent 70%); border-radius: 50%; opacity: 0; transform: scale(0.6); animation-name: star-twinkle; animation-iteration-count: infinite; animation-timing-function: ease-in-out }
+
+@keyframes star-twinkle {
+  0% { opacity: 0; transform: scale(0.6) }
+  40% { opacity: 0.9; transform: scale(1.05) }
+  100% { opacity: 0; transform: scale(0.85) }
+}
+
+@media (max-width: 640px) {
+  .page-stars { display: none }
+}
+
+/* Planet thumbnail for mission cards */
+.planet-thumb-wrapper { background: linear-gradient(180deg, rgba(20,18,40,0.3), rgba(12,10,25,0.6)); border-radius: 12px; }
+.planet-thumb { width: 140px; height: 140px; border-radius: 999px; box-shadow: inset -12px -6px 40px rgba(0,0,0,0.6), 0 18px 60px rgba(30,24,80,0.4); background: radial-gradient(circle at 30% 30%, #9fa8ff 0%, #2b2b5f 60%); transform: scale(1) translateZ(0); transition: transform 360ms ease }
+.project-card:hover .planet-thumb { transform: scale(1.08) rotate(6deg) }
+
+/* Constellation drawing animation (stroke-dash technique) */
+.constellation { position: absolute; right: 8px; bottom: 8px; width: 40%; height: 40%; opacity: 0.9; pointer-events: none }
+.const-line { stroke-dasharray: 220; stroke-dashoffset: 220; transition: stroke-dashoffset 1.2s ease-out 0.3s, opacity 0.8s; opacity: 0.9 }
+.project-card.appear .const-line { stroke-dashoffset: 0 }
+
+/* Ensure mission log lists look neat */
+.mission-panel ul { margin-top: 6px }
+
+/* small color variable for mission-related text */
+.text-cosmic-200 { color: #cfe8ff }
+
+.mission-panel { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(124,108,255,0.08); backdrop-filter: blur(6px); }
+
+.project-card { transform-origin: center; }
+/* ensure project cards are on top of background layers and not clipped */
+.project-card { position: relative; z-index: 5; transform: translateZ(0); }
+.mission-panel { position: relative; z-index: 2; }
+
+/* 3D pop/card perspective */
+.projects-grid { perspective: 1200px }
+.project-card { transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, filter 220ms ease }
+.project-card:hover { transform: translateZ(26px) translateY(-8px) rotateX(4deg) scale(1.02); box-shadow: 0 20px 60px rgba(20,18,40,0.5); filter: saturate(1.03) }
+.project-card:active { transform: translateZ(10px) translateY(-4px) scale(1.01) }
+
+/* Contact action buttons in About */
+.contact-actions { display: flex; align-items: center }
+.contact-btn { display: inline-grid; place-items: center; width:44px; height:44px; border-radius:10px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(124,108,255,0.08); color: #dbeafe; text-decoration: none }
+.contact-btn svg { transition: transform 220ms ease, filter 220ms ease }
+.contact-btn:hover { box-shadow: 0 10px 30px rgba(124,108,255,0.12); transform: translateY(-6px); border-color: rgba(124,108,255,0.18) }
+.contact-btn:active { transform: translateY(-2px) scale(0.98) }
+.contact-btn:focus { outline: 3px solid rgba(124,108,255,0.12); outline-offset: 3px }
+
+/* tiny pulse animation for GitHub specifically */
+.contact-btn:nth-child(1) { animation: pulse-slow 8s ease-in-out infinite }
+@keyframes pulse-slow { 0% { box-shadow: 0 0 0 rgba(124,108,255,0) } 50% { box-shadow: 0 8px 28px rgba(124,108,255,0.045) } 100% { box-shadow: 0 0 0 rgba(124,108,255,0) } }
+
+@keyframes orbit-slow { from { transform: rotate(0deg) translateX(0); } to { transform: rotate(360deg) translateX(0); } }
+.orbit-wrapper { position: relative; }
+.orbit { position: absolute; inset:0; animation: orbit-slow 18s linear infinite; }
+.orbit .node { position: absolute; left: 50%; top: 50%; transform-origin: -120px 0; }
+
+.avatar-loader { background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 8px; color: #cbd5e1; font-size: 12px; }
+.avatar-toggle { display:flex; gap:8px; align-items:center; }
+.avatar-toggle button { background: transparent; border: 1px solid rgba(255,255,255,0.06); padding:6px 8px; border-radius:6px; color:#e6eef8 }
+.avatar-toggle button.active { border-color: rgba(124,108,255,0.9); box-shadow: 0 6px 18px rgba(124,108,255,0.12); }
+
+/* Horizontal timeline styles */
+.timeline-container { overflow: hidden; padding: 12px 0; }
+.timeline-scroll { overflow-x: auto; padding: 12px 20px; scrollbar-width: thin; }
+.timeline-line { position: absolute; left: 0; right: 0; top: 54px; height: 2px; background: linear-gradient(90deg, rgba(124,108,255,0.12), rgba(0,247,255,0.06)); z-index:1 }
+.timeline-item { width: 220px; }
+.timeline-node-wrapper { position: relative; z-index:3 }
+.timeline-node { min-height: 64px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+.timeline-popup { position: absolute; left: 50%; transform: translateX(-50%); top: 84px; width: 300px; z-index:4; pointer-events: none; }
+
+/* Popups are controlled via JS (Framer Motion). Don't rely on CSS :hover so touch devices work. */
+
+/* Active / focus styles for timeline nodes */
+.timeline-node.active { box-shadow: 0 10px 30px rgba(124,108,255,0.18); transform: translateY(-4px); border: 1px solid rgba(124,108,255,0.28); }
+.timeline-node:focus-visible { outline: 3px solid rgba(124,108,255,0.14); outline-offset: 4px }
+.timeline-node .title { font-weight: 600 }
+
+/* Small marker on the connecting line under the active item */
+.timeline-line::after { content: '' ; position: absolute; left: 50%; transform: translateX(-50%); top: -6px; width: 10px; height: 10px; border-radius: 50%; background: rgba(124,108,255,0.9); opacity: 0.0; transition: opacity 160ms }
+.timeline-node.active ~ .timeline-line::after { opacity: 1 }
+
+@media (max-width: 640px) {
+  .timeline-item { width: 160px }
+  .timeline-popup { width: 220px }
+}
+
